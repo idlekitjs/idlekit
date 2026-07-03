@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "@idlekitjs/core": ["../core/src/index.ts"],
+      "@idlekitjs/types": ["../types/src/index.ts"],
+      "@idlekitjs/utils": ["../utils/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}

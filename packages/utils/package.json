@@ -1,0 +1,44 @@
+{
+  "name": "@idlekitjs/utils",
+  "version": "0.1.0",
+  "description": "Framework-agnostic helpers shared across @idlekitjs: number clamping and frame rate measurement.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idlekitjs/idlekit.git",
+    "directory": "packages/utils"
+  },
+  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/utils#readme",
+  "bugs": {
+    "url": "https://github.com/idlekitjs/idlekit/issues"
+  },
+  "keywords": [
+    "idlekit",
+    "incremental-game",
+    "utilities",
+    "typescript"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}

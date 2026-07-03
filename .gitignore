@@ -1,0 +1,11 @@
+node_modules/
+.pnpm-store/
+dist/
+dist-ssr/
+*.local
+.DS_Store
+.vite/
+coverage/
+*.log
+dev-dist/
+package-lock.json

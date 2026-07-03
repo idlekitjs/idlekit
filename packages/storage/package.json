@@ -1,0 +1,55 @@
+{
+  "name": "@idlekitjs/storage",
+  "version": "0.1.0",
+  "description": "Persistence backends for the @idlekitjs SaveManager (memory, localStorage, ...).",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./local-storage": {
+      "types": "./dist/local-storage/index.d.ts",
+      "import": "./dist/local-storage/index.js"
+    },
+    "./memory": {
+      "types": "./dist/memory/index.d.ts",
+      "import": "./dist/memory/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idlekitjs/idlekit.git",
+    "directory": "packages/storage"
+  },
+  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/storage#readme",
+  "bugs": {
+    "url": "https://github.com/idlekitjs/idlekit/issues"
+  },
+  "keywords": [
+    "idlekit",
+    "incremental-game",
+    "save",
+    "storage"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@idlekitjs/types": "workspace:^"
+  }
+}

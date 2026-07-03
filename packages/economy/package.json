@@ -1,0 +1,55 @@
+{
+  "name": "@idlekitjs/economy",
+  "version": "0.1.0",
+  "description": "Economic vocabulary and atomic transactions for @idlekitjs games: resources, accessors, costs, rewards, requirements, transactions, cost curves.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./accessors": {
+      "types": "./dist/accessors/index.d.ts",
+      "import": "./dist/accessors/index.js"
+    },
+    "./cost-curves": {
+      "types": "./dist/cost-curves/index.d.ts",
+      "import": "./dist/cost-curves/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idlekitjs/idlekit.git",
+    "directory": "packages/economy"
+  },
+  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/economy#readme",
+  "bugs": {
+    "url": "https://github.com/idlekitjs/idlekit/issues"
+  },
+  "keywords": [
+    "idlekit",
+    "incremental-game",
+    "economy",
+    "transactions"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@idlekitjs/utils": "workspace:^"
+  }
+}

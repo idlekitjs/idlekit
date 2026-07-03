@@ -1,0 +1,114 @@
+{
+  "name": "@idlekitjs/mechanics",
+  "version": "0.1.0",
+  "description": "Reusable idle gameplay primitives for @idlekitjs (producers, modifiers, collections, projects).",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./producers": {
+      "types": "./dist/producers/index.d.ts",
+      "import": "./dist/producers/index.js"
+    },
+    "./producers/economy": {
+      "types": "./dist/producers/economy/index.d.ts",
+      "import": "./dist/producers/economy/index.js"
+    },
+    "./modifiers": {
+      "types": "./dist/modifiers/index.d.ts",
+      "import": "./dist/modifiers/index.js"
+    },
+    "./collections": {
+      "types": "./dist/collections/index.d.ts",
+      "import": "./dist/collections/index.js"
+    },
+    "./collections/economy": {
+      "types": "./dist/collections/economy/index.d.ts",
+      "import": "./dist/collections/economy/index.js"
+    },
+    "./projects": {
+      "types": "./dist/projects/index.d.ts",
+      "import": "./dist/projects/index.js"
+    },
+    "./projects/economy": {
+      "types": "./dist/projects/economy/index.d.ts",
+      "import": "./dist/projects/economy/index.js"
+    },
+    "./crafting": {
+      "types": "./dist/crafting/index.d.ts",
+      "import": "./dist/crafting/index.js"
+    },
+    "./crafting/economy": {
+      "types": "./dist/crafting/economy/index.d.ts",
+      "import": "./dist/crafting/economy/index.js"
+    },
+    "./boosts": {
+      "types": "./dist/boosts/index.d.ts",
+      "import": "./dist/boosts/index.js"
+    },
+    "./boosts/economy": {
+      "types": "./dist/boosts/economy/index.d.ts",
+      "import": "./dist/boosts/economy/index.js"
+    },
+    "./containers": {
+      "types": "./dist/containers/index.d.ts",
+      "import": "./dist/containers/index.js"
+    },
+    "./containers/economy": {
+      "types": "./dist/containers/economy/index.d.ts",
+      "import": "./dist/containers/economy/index.js"
+    },
+    "./timers": {
+      "types": "./dist/timers/index.d.ts",
+      "import": "./dist/timers/index.js"
+    },
+    "./pickups": {
+      "types": "./dist/pickups/index.d.ts",
+      "import": "./dist/pickups/index.js"
+    },
+    "./pickups/economy": {
+      "types": "./dist/pickups/economy/index.d.ts",
+      "import": "./dist/pickups/economy/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idlekitjs/idlekit.git",
+    "directory": "packages/mechanics"
+  },
+  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/mechanics#readme",
+  "bugs": {
+    "url": "https://github.com/idlekitjs/idlekit/issues"
+  },
+  "keywords": [
+    "idlekit",
+    "incremental-game",
+    "mechanics",
+    "gameplay"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@idlekitjs/core": "workspace:^",
+    "@idlekitjs/economy": "workspace:^",
+    "@idlekitjs/types": "workspace:^",
+    "@idlekitjs/utils": "workspace:^"
+  }
+}

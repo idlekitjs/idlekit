@@ -1,0 +1,48 @@
+{
+  "name": "@idlekitjs/devtools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Development tools for @idlekitjs games: live debug overlay, metrics, quick data wipe.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idlekitjs/idlekit.git",
+    "directory": "packages/devtools"
+  },
+  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/devtools#readme",
+  "bugs": {
+    "url": "https://github.com/idlekitjs/idlekit/issues"
+  },
+  "keywords": [
+    "idlekit",
+    "incremental-game",
+    "devtools",
+    "debug"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "echo '@idlekitjs/devtools is private and must not be published.' && exit 1"
+  },
+  "dependencies": {
+    "@idlekitjs/core": "workspace:^",
+    "@idlekitjs/types": "workspace:^",
+    "@idlekitjs/utils": "workspace:^"
+  }
+}

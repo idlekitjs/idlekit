@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@idlekitjs/types": ["./packages/types/src/index.ts"],
+      "@idlekitjs/utils": ["./packages/utils/src/index.ts"],
+      "@idlekitjs/core": ["./packages/core/src/index.ts"],
+      "@idlekitjs/dom": ["./packages/dom/src/index.ts"],
+      "@idlekitjs/dom/*": ["./packages/dom/src/*/index.ts"],
+      "@idlekitjs/browser": ["./packages/browser/src/index.ts"],
+      "@idlekitjs/browser/*": ["./packages/browser/src/*/index.ts"],
+      "@idlekitjs/economy": ["./packages/economy/src/index.ts"],
+      "@idlekitjs/economy/*": ["./packages/economy/src/*/index.ts"],
+      "@idlekitjs/mechanics": ["./packages/mechanics/src/index.ts"],
+      "@idlekitjs/mechanics/*": ["./packages/mechanics/src/*/index.ts"],
+      "@idlekitjs/storage": ["./packages/storage/src/index.ts"],
+      "@idlekitjs/storage/*": ["./packages/storage/src/*/index.ts"],
+      "@idlekitjs/plugins": ["./packages/plugins/src/index.ts"],
+      "@idlekitjs/plugins/*": ["./packages/plugins/src/*/index.ts"],
+      "@idlekitjs/devtools": ["./packages/devtools/src/index.ts"]
+    },
+    "noEmit": true,
+    "types": ["vitest/globals"]
+  },
+  "include": ["packages/*/src", "packages/*/tests"]
+}
