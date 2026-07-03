@@ -2,6 +2,19 @@ import { clamp } from "@idlekitjs/utils";
 import type { ProducersExtension, ProducersOptions, PurchaseResult } from "./types";
 
 /**
+ * `Math.pow`/`Math.log` are not correctly rounded and may differ by an ulp
+ * between JS engines, so a budget sitting exactly on a series total can flip
+ * the affordable count by one across environments. Affordability therefore
+ * tolerates a relative drift far above 1-ulp noise but far below any real
+ * price step.
+ */
+const BUDGET_TOLERANCE = 1e-9;
+
+function fitsBudget(amount: number, budget: number): boolean {
+  return amount <= budget + budget * BUDGET_TOLERANCE;
+}
+
+/**
  * Producers: the cascade of tiers where each tier produces the one below it and
  * tier 0 produces the resource. The mechanic (cycles, cascade, costs) lives
  * here; the tiers (names, tuning) stay as data in the game.
@@ -86,11 +99,14 @@ export function producers<T extends object>(options: ProducersOptions<T>): Produ
     }
 
     const first = cost(index, state);
-    if (!Number.isFinite(first) || first < 0 || budget < first) {
+    if (!Number.isFinite(first) || first < 0) {
       return 0;
     }
     if (first === 0) {
       return Number.MAX_SAFE_INTEGER;
+    }
+    if (!fitsBudget(first, budget)) {
+      return 0;
     }
 
     const growth = def.costGrowth;
@@ -106,10 +122,10 @@ export function producers<T extends object>(options: ProducersOptions<T>): Produ
 
     // Floating point precision around powers can over/under-shoot by one. Keep
     // the correction bounded; the geometric inverse still does the real work.
-    for (let i = 0; i < 8 && quantity > 0 && costFor(index, state, quantity) > budget; i++) {
+    for (let i = 0; i < 8 && quantity > 0 && !fitsBudget(costFor(index, state, quantity), budget); i++) {
       quantity--;
     }
-    for (let i = 0; i < 8 && costFor(index, state, quantity + 1) <= budget; i++) {
+    for (let i = 0; i < 8 && fitsBudget(costFor(index, state, quantity + 1), budget); i++) {
       quantity++;
     }
     return quantity;
@@ -126,10 +142,13 @@ export function producers<T extends object>(options: ProducersOptions<T>): Produ
     if (bought <= 0) {
       return { bought: 0, spent: 0, remaining: currentBudget };
     }
-    const spent = costFor(index, state, bought);
-    if (!Number.isFinite(spent) || spent > currentBudget) {
+    const priced = costFor(index, state, bought);
+    if (!Number.isFinite(priced) || !fitsBudget(priced, currentBudget)) {
       return { bought: 0, spent: 0, remaining: currentBudget };
     }
+    // A boundary purchase may price an ulp above the budget; never debit more
+    // than the budget itself.
+    const spent = Math.min(priced, currentBudget);
     pay(state, index, spent);
 
     const column = options.getColumn(state);
