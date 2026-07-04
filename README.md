@@ -43,6 +43,7 @@ Public packages, published on npm under the `@idlekitjs` scope:
 - `@idlekitjs/economy`: resources, accessors, costs, rewards, requirements, transactions, and cost curves.
 - `@idlekitjs/storage`: memory and localStorage save adapters.
 - `@idlekitjs/dom`: DOM renderer and bindings.
+- `@idlekitjs/react`: React provider and hooks over the engine state and events.
 - `@idlekitjs/browser`: page lifecycle, requestAnimationFrame scheduler, and screen helpers.
 - `@idlekitjs/mechanics`: reusable idle gameplay mechanics.
 - `@idlekitjs/plugins`: autosave and offline progress policies.

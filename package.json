@@ -7,7 +7,7 @@
   "packageManager": "pnpm@11.9.0",
   "scripts": {
     "build": "pnpm -r --filter \"./packages/*\" build",
-    "build:public": "pnpm --filter @idlekitjs/types --filter @idlekitjs/utils --filter @idlekitjs/core --filter @idlekitjs/economy --filter @idlekitjs/storage --filter @idlekitjs/dom --filter @idlekitjs/browser --filter @idlekitjs/mechanics --filter @idlekitjs/plugins build",
+    "build:public": "pnpm --filter @idlekitjs/types --filter @idlekitjs/utils --filter @idlekitjs/core --filter @idlekitjs/economy --filter @idlekitjs/storage --filter @idlekitjs/dom --filter @idlekitjs/browser --filter @idlekitjs/mechanics --filter @idlekitjs/plugins --filter @idlekitjs/react build",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit",
