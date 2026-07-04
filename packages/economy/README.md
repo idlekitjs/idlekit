@@ -18,4 +18,4 @@ import { geometric } from "@idlekitjs/economy/cost-curves";
 
 ## Status
 
-Public package under the `@idlekitjs` scope. Publish-ready, but not published to npm yet.
+Public package in the IdleKit toolkit, published on npm under the `@idlekitjs` scope.

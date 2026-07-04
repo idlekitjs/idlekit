@@ -16,4 +16,4 @@ import { clamp, FrameRateMeter, positiveOr } from "@idlekitjs/utils";
 
 ## Status
 
-Public package under the `@idlekitjs` scope. Publish-ready, but not published to npm yet.
+Public package in the IdleKit toolkit, published on npm under the `@idlekitjs` scope.

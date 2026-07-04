@@ -101,14 +101,30 @@ pnpm test:watch
 
 ## Publishing Workflow
 
-Changesets is configured, but this workspace is not publishing packages yet.
+Releases use [Changesets](https://github.com/changesets/changesets). The
+`@idlekitjs/*` packages are published to npm; `@idlekitjs/devtools` is private
+and never published (it is listed in `.changeset/config.json` `ignore`, marked
+`private`, and guarded by a failing `prepublishOnly` script).
+
+Ongoing releases (after the first `0.1.0` publish):
 
 1. Make package changes.
-2. Run `pnpm changeset` for user-visible package changes.
-3. Run `pnpm version-packages` when preparing a release.
-4. Run `pnpm build:public`.
-5. Run package dry-runs before publishing.
-6. Run `pnpm release` only from the future public package repository when npm publishing is intended.
+2. Run `pnpm changeset` and describe the user-visible changes.
+3. Run `pnpm version-packages` to apply version bumps and changelogs.
+4. Commit the version bump, then run `pnpm release`.
 
-Confirm the `repository`, `homepage`, and `bugs` URLs before the first real npm
-publish if the final GitHub organization or repository name differs.
+`pnpm release` runs `pnpm build:public` and then `changeset publish`, which
+delegates to `pnpm publish` — internal `workspace:^` ranges are rewritten to
+real semver versions in the published tarballs. Never run a raw `npm publish`
+from a package folder: it would leave `workspace:^` in the published
+`package.json`.
+
+For the very first publish, the packages are already at `0.1.0` with no pending
+changeset, so publish the existing versions directly rather than creating a
+changeset (which would bump them away from `0.1.0`):
+
+```sh
+pnpm install --frozen-lockfile
+pnpm build:public
+pnpm changeset publish   # requires npm auth; publishes @idlekitjs/* at 0.1.0
+```
