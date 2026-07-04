@@ -10,7 +10,12 @@ export type RewardInput<T> = AmountsInput | ((state: T) => AmountsInput);
 /**
  * An atomic economic action: check requirements, pay the cost, apply the
  * effect, credit the reward — all or nothing. Transactions are for player
- * actions (buy, upgrade, claim, unlock...), never for simulation ticks.
+ * actions (buy, upgrade, claim, unlock...), selling, crafting costs, packs and
+ * anything that needs affordability diagnostics.
+ *
+ * Direct state mutation is still appropriate for simulation ticks, counters,
+ * diagnostics, elapsed/progress state, one-off game-specific side effects and
+ * non-economic domain state.
  */
 export interface Transaction<T> {
   /** Stable id (diagnostics, logging). */

@@ -40,7 +40,7 @@ export interface PickupDef<T extends object> {
  * Serializable active item. Exists in state only while active: collected and
  * expired items are removed, no status field is stored. `remaining` is
  * mutated in place by `update` (continuous countdowns render via frame
- * bindings, not dirty keys).
+ * callbacks, not dirty-key reactive bindings).
  */
 export interface PickupItem {
   /** Unique instance id: `<type>#<n>`. */
@@ -66,7 +66,11 @@ export interface PickupsData {
   spawnProgress: Record<string, number>;
 }
 
-/** UI view model: the item plus its elapsed-lifetime fraction (0 fresh -> 1 expiring). */
+/**
+ * UI view model: the item plus its elapsed-lifetime fraction (0 fresh -> 1
+ * expiring). Render lifetime rings/countdowns from a frame callback. Reactive
+ * bindings are still fine for visible pickup lists and active counts.
+ */
 export type PickupView = PickupItem & {
   lifetimeFraction?: number;
 };
@@ -111,7 +115,11 @@ export interface PickupsExtension<T extends object> extends Extension<T> {
    * actions. Returns `undefined` (removing nothing) unless the item is ready.
    */
   take(state: T, id: string): PickupItem | undefined;
-  /** View models of every active item, for rendering. */
+  /**
+   * View models of every active item. Use a frame callback for lifetime/expiry
+   * UI because `remaining` changes in place; use reactive bindings for the
+   * visible list itself when spawn/take/expire reassigns `items`.
+   */
   visible(state: T): PickupView[];
   /** Count of active items (of one type, or all). */
   active(state: T, type?: string): number;

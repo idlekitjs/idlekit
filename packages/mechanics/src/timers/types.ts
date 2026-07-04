@@ -17,7 +17,8 @@ export interface TimerDef {
 
 /**
  * Serializable runtime entry for one timer.
- * - `remaining` is mutated in place by `update` (no render depends on it);
+ * - `remaining` is mutated in place by `update`; render countdown/progress UI
+ *   from a frame callback, not a dirty-key reactive binding;
  * - `running` changes are reassigned through `setData` (render-relevant).
  */
 export interface TimerState {
@@ -50,6 +51,11 @@ export interface TimersExtension<T extends object> extends Extension<T> {
   isRunning(state: T, id: string): boolean;
   /** Fire once manually (running or not) and reset the period. `false` on unknown id. */
   trigger(state: T, id: string): boolean;
-  /** Progress toward the next firing, in `[0, 1]` (for a bar). */
+  /**
+   * Progress toward the next firing, in `[0, 1]` (for a bar). This can change
+   * continuously from in-place `remaining` state, so use a frame callback for
+   * timer countdowns/progress. Reactive bindings are fine for running state and
+   * timer lists.
+   */
   progressFraction(state: T, id: string): number;
 }

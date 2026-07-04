@@ -33,8 +33,9 @@ export interface ProducerDef {
  *                means "no manual cycle in flight", so old saves keep working).
  *
  * Stored in the game state (serializable). `total` and `running` are reassigned
- * on change (so the reactive store sees it); `progress` is mutated in place (no
- * render is needed for it).
+ * on change (so the reactive store sees it); `progress` is mutated in place.
+ * Render cycle progress bars with a frame callback (for example
+ * `renderer.addFrame`), not a reactive binding that only runs on dirty keys.
  */
 export interface ProducerColumn {
   owned: number[];
@@ -138,7 +139,12 @@ export interface ProducersExtension<T extends object> extends Extension<T> {
   isRunning(state: T, index: number): boolean;
   /** Average output of tier `index` per second (for display). */
   ratePerSecond(state: T, index?: number): number;
-  /** Progress toward the next cycle of tier `index`, in `[0, 1]` (for a bar). */
+  /**
+   * Progress toward the next cycle of tier `index`, in `[0, 1]` (for a bar).
+   * This can change continuously from in-place state, so render it from a
+   * frame callback. Reactive bindings are still right for counts, costs and
+   * affordability labels.
+   */
   progressFraction(state: T, index: number): number;
   /**
    * Real seconds per cycle of tier `index` after the speed multiplier

@@ -44,7 +44,11 @@ export interface CraftingJob {
   id: string;
   recipeId: string;
   machineId: string;
-  /** Seconds accumulated (mutated in place: no render depends on it). */
+  /**
+   * Seconds accumulated, mutated in place. Render crafting progress bars from a
+   * frame callback; reactive bindings are still fine for job lists,
+   * availability, completed jobs and resource counts.
+   */
   elapsed: number;
   /** Seconds required, copied from the recipe when the job starts. */
   duration: number;
@@ -106,6 +110,10 @@ export interface CraftingExtension<T extends object> extends Extension<T> {
   activeJobs(state: T): CraftingJob[];
   /** The machine's active job, if any. */
   jobFor(state: T, machineId: string): CraftingJob | undefined;
-  /** Progress of the machine's active job in `[0, 1]` (0 when idle). */
+  /**
+   * Progress of the machine's active job in `[0, 1]` (0 when idle). This can
+   * change continuously from in-place job state, so use a frame callback for
+   * smooth bars/countdowns.
+   */
   progressFraction(state: T, machineId: string): number;
 }
