@@ -5,8 +5,7 @@ Development-only tools for IdleKit games, including a debug overlay and metrics.
 ## Install
 
 This package is **private and not published to npm**. It is consumed only
-through a workspace dependency (for example from the `idlekit-games`
-repository, linked via a local pnpm workspace):
+through a local workspace dependency:
 
 ```json
 {

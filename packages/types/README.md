@@ -5,8 +5,12 @@ interfaces and save contracts with no runtime implementation.
 
 ## Install
 
+IdleKit is ESM-only and published on npm under the `@idlekitjs` scope:
+
 ```sh
 pnpm add @idlekitjs/types
+npm install @idlekitjs/types
+yarn add @idlekitjs/types
 ```
 
 ## Import

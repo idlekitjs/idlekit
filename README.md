@@ -2,30 +2,40 @@
 
 IdleKit is a TypeScript toolkit for incremental and idle games. It provides a
 headless engine, economic primitives, reusable mechanics, browser and DOM
-bridges, save adapters, and operational plugins that can be composed by private
-games.
+bridges, save adapters, and operational plugins that can be composed into any
+idle or incremental game.
 
-This repository contains only the `@idlekitjs/*` npm packages. The
-documentation site lives in the `idlekit-docs` repository and the private games
-live in the `idlekit-games` repository.
+This repository contains the `@idlekitjs/*` npm packages. Long-form guides and
+API reference live on the IdleKit documentation site.
 
 ## Installation
 
-Use pnpm for development:
+IdleKit packages are published on npm under the `@idlekitjs` scope. Install a
+single package with your package manager of choice:
 
 ```sh
-pnpm install
+pnpm add @idlekitjs/core
+npm install @idlekitjs/core
+yarn add @idlekitjs/core
 ```
 
-Install public packages in a consumer project as needed:
+A typical game pulls in a few packages at once:
 
 ```sh
-pnpm add @idlekitjs/core @idlekitjs/browser @idlekitjs/dom @idlekitjs/storage
+pnpm add @idlekitjs/core @idlekitjs/economy @idlekitjs/mechanics
+npm install @idlekitjs/core @idlekitjs/economy @idlekitjs/mechanics
+yarn add @idlekitjs/core @idlekitjs/economy @idlekitjs/mechanics
 ```
+
+IdleKit is **ESM-only**: use ESM `import` syntax, and for standalone Node
+scripts set `"type": "module"` in your `package.json` (or use an `.mjs` file).
+
+See the [IdleKit repository](https://github.com/idlekitjs/idlekit) and the
+documentation site for the full installation guide and API reference.
 
 ## Packages
 
-Public publish-ready packages:
+Public packages, published on npm under the `@idlekitjs` scope:
 
 - `@idlekitjs/types`: shared engine contracts.
 - `@idlekitjs/utils`: framework-agnostic helpers.

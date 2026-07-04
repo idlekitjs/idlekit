@@ -5,8 +5,12 @@ progress.
 
 ## Install
 
+IdleKit is ESM-only and published on npm under the `@idlekitjs` scope:
+
 ```sh
 pnpm add @idlekitjs/plugins
+npm install @idlekitjs/plugins
+yarn add @idlekitjs/plugins
 ```
 
 ## Import

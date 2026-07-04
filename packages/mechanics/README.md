@@ -5,8 +5,12 @@ projects, crafting, boosts, containers, timers, and pickups.
 
 ## Install
 
+IdleKit is ESM-only and published on npm under the `@idlekitjs` scope:
+
 ```sh
 pnpm add @idlekitjs/mechanics
+npm install @idlekitjs/mechanics
+yarn add @idlekitjs/mechanics
 ```
 
 ## Import

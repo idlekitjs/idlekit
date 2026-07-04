@@ -5,8 +5,12 @@ scheduling, and screen helpers.
 
 ## Install
 
+IdleKit is ESM-only and published on npm under the `@idlekitjs` scope:
+
 ```sh
 pnpm add @idlekitjs/browser
+npm install @idlekitjs/browser
+yarn add @idlekitjs/browser
 ```
 
 ## Import

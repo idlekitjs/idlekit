@@ -5,8 +5,12 @@ localStorage adapters.
 
 ## Install
 
+IdleKit is ESM-only and published on npm under the `@idlekitjs` scope:
+
 ```sh
 pnpm add @idlekitjs/storage
+npm install @idlekitjs/storage
+yarn add @idlekitjs/storage
 ```
 
 ## Import

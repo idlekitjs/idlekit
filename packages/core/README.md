@@ -5,8 +5,12 @@ manager, decimal numbers, randomness, and formatting helpers.
 
 ## Install
 
+IdleKit is ESM-only and published on npm under the `@idlekitjs` scope:
+
 ```sh
 pnpm add @idlekitjs/core
+npm install @idlekitjs/core
+yarn add @idlekitjs/core
 ```
 
 ## Import
