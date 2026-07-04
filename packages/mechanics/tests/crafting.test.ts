@@ -294,6 +294,140 @@ describe("crafting jobs", () => {
   });
 });
 
+describe("crafting modifiers", () => {
+  it("uses recipe duration and outputs unchanged when no options are set", () => {
+    const ext = makeCrafting();
+    const state = makeState();
+
+    ext.start(state, "sandwich", "kitchen-1");
+    expect(state.jobs[0].duration).toBe(10);
+
+    ext.update?.(state, 10);
+    expect(state.jobs).toEqual([]);
+    expect(state.resources.sandwich).toBe(1);
+  });
+
+  it("captures the speed multiplier when a job starts", () => {
+    let speed = 2;
+    const ext = makeCrafting({ getSpeedMultiplier: () => speed });
+    const state = makeState();
+
+    ext.start(state, "sandwich", "kitchen-1");
+    expect(state.jobs[0].duration).toBe(5);
+
+    speed = 4;
+    ext.update?.(state, 2);
+    expect(state.jobs[0].duration).toBe(5);
+    expect(ext.progressFraction(state, "kitchen-1")).toBeCloseTo(0.4);
+
+    ext.update?.(state, 3);
+    expect(state.jobs).toEqual([]);
+    expect(state.resources.sandwich).toBe(1);
+  });
+
+  it("clamps zero and negative speed multipliers to a finite positive duration", () => {
+    for (const speed of [0, -2]) {
+      const ext = makeCrafting({ getSpeedMultiplier: () => speed });
+      const state = makeState();
+
+      ext.start(state, "sandwich", "kitchen-1");
+      expect(Number.isFinite(state.jobs[0].duration)).toBe(true);
+      expect(state.jobs[0].duration).toBeGreaterThan(0);
+      expect(state.jobs[0].duration).toBeCloseTo(10_000_000);
+    }
+  });
+
+  it("credits fractional outputs with the default yield rounding", () => {
+    const ext = makeCrafting({ getYieldMultiplier: () => 1.5 });
+    const state = makeState();
+
+    ext.start(state, "sandwich", "kitchen-1");
+    ext.update?.(state, 10);
+
+    expect(state.resources.sandwich).toBe(1.5);
+  });
+
+  it("floors scaled outputs when yieldRounding is floor", () => {
+    const ext = makeCrafting({ getYieldMultiplier: () => 1.5, yieldRounding: "floor" });
+    const state = makeState();
+
+    ext.start(state, "sandwich", "kitchen-1");
+    ext.update?.(state, 10);
+
+    expect(state.resources.sandwich).toBe(1);
+  });
+
+  it("rounds scaled outputs when yieldRounding is round", () => {
+    const ext = makeCrafting({ getYieldMultiplier: () => 1.5, yieldRounding: "round" });
+    const state = makeState();
+
+    ext.start(state, "sandwich", "kitchen-1");
+    ext.update?.(state, 10);
+
+    expect(state.resources.sandwich).toBe(2);
+  });
+
+  it("ceils scaled outputs when yieldRounding is ceil", () => {
+    const ext = makeCrafting({ getYieldMultiplier: () => 2.5, yieldRounding: "ceil" });
+    const state = makeState();
+
+    ext.start(state, "sandwich", "kitchen-1");
+    ext.update?.(state, 10);
+
+    expect(state.resources.sandwich).toBe(3);
+  });
+
+  it("allows zero yield while still completing and removing the job", () => {
+    const ext = makeCrafting({ getYieldMultiplier: () => 0 });
+    const state = makeState();
+
+    ext.start(state, "sandwich", "kitchen-1");
+    ext.update?.(state, 10);
+
+    expect(state.jobs).toEqual([]);
+    expect(state.resources.sandwich).toBe(0);
+  });
+
+  it("scales every output in a multi-output recipe", () => {
+    const ext = makeCrafting({ getYieldMultiplier: () => 1.5 });
+    const state = makeState();
+
+    ext.start(state, "juice", "press-1");
+    ext.update?.(state, 4);
+
+    expect(state.resources.juice).toBe(1.5);
+    expect(state.resources.pulp).toBe(3);
+  });
+
+  it("passes the actual credited outputs to onComplete", () => {
+    const onComplete = vi.fn();
+    const ext = makeCrafting({
+      getYieldMultiplier: () => 1.5,
+      yieldRounding: "round",
+      onComplete,
+    });
+    const state = makeState();
+
+    ext.start(state, "sandwich", "kitchen-1");
+    ext.update?.(state, 10);
+
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onComplete.mock.calls[0][1]).toEqual({ sandwich: 2 });
+  });
+
+  it("applies yield multipliers to every job completed by a large offline dt", () => {
+    const ext = makeCrafting({ getYieldMultiplier: () => 2 });
+    const state = makeState();
+
+    ext.start(state, "sandwich", "kitchen-1");
+    ext.start(state, "sandwich", "kitchen-2");
+    ext.update?.(state, 60 * 60);
+
+    expect(state.jobs).toEqual([]);
+    expect(state.resources.sandwich).toBe(4);
+  });
+});
+
 describe("crafting save/load", () => {
   /** Wire the extension into a real engine and replay the `loaded` event. */
   function loadedEngine(jobs: CraftingJob[]) {
@@ -321,7 +455,54 @@ describe("crafting save/load", () => {
     expect(state.resources.sandwich).toBe(1);
   });
 
-  it("heals a stale save: unknown ids dropped, duration re-derived, elapsed clamped", () => {
+  it("preserves valid captured duration across load", () => {
+    const { ext, state } = loadedEngine([
+      {
+        id: "kitchen-1:sandwich",
+        recipeId: "sandwich",
+        machineId: "kitchen-1",
+        elapsed: 2,
+        duration: 5,
+      },
+    ]);
+
+    expect(state.jobs[0].duration).toBe(5);
+    ext.update?.(state, 3);
+    expect(state.jobs).toEqual([]);
+    expect(state.resources.sandwich).toBe(1);
+  });
+
+  it("repairs corrupted durations to the recipe duration on load", () => {
+    const missingDuration = {
+      id: "missing-duration",
+      recipeId: "juice",
+      machineId: "press-1",
+      elapsed: 0,
+    } as CraftingJob;
+
+    const { state } = loadedEngine([
+      {
+        id: "nan-duration",
+        recipeId: "sandwich",
+        machineId: "kitchen-1",
+        elapsed: 0,
+        duration: NaN,
+      },
+      missingDuration,
+      { id: "zero-duration", recipeId: "chop", machineId: "bench", elapsed: 0, duration: 0 },
+      {
+        id: "negative-duration",
+        recipeId: "sandwich",
+        machineId: "kitchen-2",
+        elapsed: 0,
+        duration: -1,
+      },
+    ]);
+
+    expect(state.jobs.map((job) => job.duration)).toEqual([10, 4, 2, 10]);
+  });
+
+  it("heals a stale save: unknown ids dropped, elapsed clamped, valid duration preserved", () => {
     const { state } = loadedEngine([
       { id: "a", recipeId: "removed-recipe", machineId: "kitchen-1", elapsed: 1, duration: 5 },
       { id: "b", recipeId: "sandwich", machineId: "removed-machine", elapsed: 1, duration: 10 },
@@ -330,7 +511,7 @@ describe("crafting save/load", () => {
     ]);
 
     expect(state.jobs).toEqual([
-      { id: "c", recipeId: "sandwich", machineId: "kitchen-1", elapsed: 0, duration: 10 },
+      { id: "c", recipeId: "sandwich", machineId: "kitchen-1", elapsed: 0, duration: 99 },
     ]);
   });
 });

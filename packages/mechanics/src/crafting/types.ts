@@ -50,7 +50,10 @@ export interface CraftingJob {
    * availability, completed jobs and resource counts.
    */
   elapsed: number;
-  /** Seconds required, copied from the recipe when the job starts. */
+  /**
+   * Seconds required, captured when the job starts after applying the speed
+   * multiplier. Valid saved durations are preserved across load.
+   */
   duration: number;
 }
 
@@ -85,9 +88,26 @@ export interface CraftingOptions<T extends object> {
    * machine runs at most one job).
    */
   jobId?: (recipe: RecipeDef, machine: MachineDef, state: T) => string;
+  /**
+   * Effective speed multiplier for the job (default: 1). Captured when a job
+   * starts and divides {@link RecipeDef.duration}; active job durations are
+   * preserved across load for deterministic/offline behavior.
+   */
+  getSpeedMultiplier?: (state: T, recipe: RecipeDef, machine: MachineDef) => number;
+  /**
+   * Effective output multiplier for the job (default: 1). Resolved when a job
+   * completes and applied uniformly to every recipe output. Per-output yield
+   * modifiers are intentionally out of scope for this seam.
+   */
+  getYieldMultiplier?: (state: T, recipe: RecipeDef, machine: MachineDef) => number;
+  /**
+   * Rounding applied after the yield multiplier (default: "none"). "none" keeps
+   * exact fractional outputs; "floor" and "round" use Math.floor/Math.round; "ceil" uses Math.ceil.
+   */
+  yieldRounding?: "none" | "floor" | "round" | "ceil";
   /** Notified after a job started (inputs already consumed). */
   onStart?: (job: CraftingJob, state: T) => void;
-  /** Notified after a job completed (outputs already credited). */
+  /** Notified after a job completed (actual credited outputs already applied). */
   onComplete?: (job: CraftingJob, outputs: ResourceBag, state: T) => void;
 }
 

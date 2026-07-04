@@ -10,6 +10,8 @@ import type {
   ResourceBag,
 } from "./types";
 
+const MIN_SPEED_MULTIPLIER = 1e-6;
+
 /** Wiring-time validation: a bad definition is a bug, not a game state. */
 function validateDefinitions(recipes: RecipeDef[], machines: MachineDef[]): void {
   const recipeIds = new Set<string>();
@@ -69,6 +71,40 @@ export function crafting<T extends object>(options: CraftingOptions<T>): Craftin
   const jobFor = (state: T, machineId: string): CraftingJob | undefined =>
     options.getJobs(state).find((job) => job.machineId === machineId);
 
+  function capturedDuration(state: T, recipe: RecipeDef, machine: MachineDef): number {
+    const raw = options.getSpeedMultiplier?.(state, recipe, machine) ?? 1;
+    const multiplier = Number.isFinite(raw) ? Math.max(raw, MIN_SPEED_MULTIPLIER) : 1;
+    const duration = recipe.duration / multiplier;
+    return Number.isFinite(duration) && duration > 0 ? duration : recipe.duration;
+  }
+
+  function yieldMultiplier(state: T, recipe: RecipeDef, machine: MachineDef): number {
+    const raw = options.getYieldMultiplier?.(state, recipe, machine) ?? 1;
+    return Number.isFinite(raw) ? Math.max(raw, 0) : 1;
+  }
+
+  function roundedOutput(amount: number): number {
+    switch (options.yieldRounding) {
+      case "floor":
+        return Math.floor(amount);
+      case "round":
+        return Math.round(amount);
+      case "ceil":
+        return Math.ceil(amount);
+      default:
+        return amount;
+    }
+  }
+
+  function creditedOutputs(state: T, recipe: RecipeDef, machine: MachineDef): ResourceBag {
+    const multiplier = yieldMultiplier(state, recipe, machine);
+    const outputs: ResourceBag = {};
+    for (const [id, amount] of Object.entries(recipe.outputs)) {
+      outputs[id] = roundedOutput(amount * multiplier);
+    }
+    return outputs;
+  }
+
   function status(state: T, recipeId: string, machineId: string): CraftingStatus {
     const recipe = recipesById.get(recipeId);
     if (!recipe) {
@@ -115,7 +151,7 @@ export function crafting<T extends object>(options: CraftingOptions<T>): Craftin
       recipeId,
       machineId,
       elapsed: 0,
-      duration: recipe.duration,
+      duration: capturedDuration(state, recipe, machine),
     };
     options.setJobs(state, [...options.getJobs(state), job]);
     options.onStart?.(job, state);
@@ -151,25 +187,35 @@ export function crafting<T extends object>(options: CraftingOptions<T>): Craftin
       jobs.filter((job) => job.elapsed < job.duration),
     );
 
-    let credited: ResourceBag = options.getResources(state);
-    for (const job of completed) {
+    const completions = completed.map((job) => {
       const recipe = recipesById.get(job.recipeId);
+      const machine = machinesById.get(job.machineId);
+      let outputs: ResourceBag = {};
       if (recipe) {
-        credited = addResources(credited, recipe.outputs);
+        outputs = machine ? creditedOutputs(state, recipe, machine) : { ...recipe.outputs };
       }
+      return {
+        job,
+        outputs,
+      };
+    });
+
+    let credited: ResourceBag = options.getResources(state);
+    for (const { outputs } of completions) {
+      credited = addResources(credited, outputs);
     }
     options.setResources(state, credited);
 
-    for (const job of completed) {
-      const recipe = recipesById.get(job.recipeId);
-      options.onComplete?.(job, recipe ? { ...recipe.outputs } : {}, state);
+    for (const { job, outputs } of completions) {
+      options.onComplete?.(job, outputs, state);
     }
   }
 
   /**
    * Drop jobs whose recipe/machine no longer exists (or duplicated machines)
-   * and re-derive `duration` from the current recipe, so a stale save heals
-   * against updated definitions instead of misbehaving.
+   * and repair corrupted timers. Active job duration is captured when the job
+   * starts (after speed modifiers) and is preserved across load; only missing,
+   * non-finite or non-positive durations are repaired to the recipe duration.
    */
   function sanitizeJobs(state: T): void {
     const jobs = options.getJobs(state);
@@ -185,7 +231,7 @@ export function crafting<T extends object>(options: CraftingOptions<T>): Craftin
         return false;
       }
       seenMachines.add(job.machineId);
-      if (job.duration !== recipe.duration) {
+      if (!Number.isFinite(job.duration) || job.duration <= 0) {
         job.duration = recipe.duration;
         changed = true;
       }
