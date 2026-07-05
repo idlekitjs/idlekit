@@ -1,6 +1,6 @@
-# @idlekitjs/dom
+# @idlekitjs/types
 
-## 0.1.3
+## 0.1.1
 
 ### Patch Changes
 
@@ -13,22 +13,3 @@
   `@idlekitjs/mechanics` documents the crafting speed/yield modifiers,
   `yieldRounding`, and the container transfer helpers. Every README gains
   Documentation and Repository links.
-
-- Updated dependencies [5140cd7]
-  - @idlekitjs/core@0.3.1
-  - @idlekitjs/types@0.1.1
-  - @idlekitjs/utils@0.1.1
-
-## 0.1.2
-
-### Patch Changes
-
-- Updated dependencies [3b4f2f8]
-  - @idlekitjs/core@0.3.0
-
-## 0.1.1
-
-### Patch Changes
-
-- Updated dependencies [66609a1]
-  - @idlekitjs/core@0.2.0

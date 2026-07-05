@@ -1,6 +1,6 @@
 {
   "name": "@idlekitjs/economy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Economic vocabulary and atomic transactions for @idlekitjs games: resources, accessors, costs, rewards, requirements, transactions, cost curves.",
   "type": "module",
   "sideEffects": false,

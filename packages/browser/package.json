@@ -1,6 +1,6 @@
 {
   "name": "@idlekitjs/browser",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Browser runtime bridges connecting browser APIs to @idlekitjs engine contracts (page lifecycle, rAF frame scheduler, screen helpers).",
   "type": "module",
   "sideEffects": false,

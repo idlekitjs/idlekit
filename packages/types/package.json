@@ -1,6 +1,6 @@
 {
   "name": "@idlekitjs/types",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Framework-agnostic type contracts shared across @idlekitjs packages (no runtime code).",
   "type": "module",
   "sideEffects": false,
