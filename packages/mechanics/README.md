@@ -3,6 +3,9 @@
 Reusable idle gameplay primitives for producers, modifiers, collections,
 projects, crafting, boosts, containers, timers, and pickups.
 
+- Documentation: <https://idlekitjs.github.io/packages/mechanics>
+- Repository: <https://github.com/idlekitjs/idlekit>
+
 ## Install
 
 IdleKit is ESM-only and published on npm under the `@idlekitjs` scope:
@@ -19,6 +22,20 @@ yarn add @idlekitjs/mechanics
 import { producers } from "@idlekitjs/mechanics/producers";
 import { economyPurchase } from "@idlekitjs/mechanics/producers/economy";
 ```
+
+Each mechanic is a factory returning an `Extension<T>` you install with
+`engine.use(...)`. Prefer the subpath imports for lean bundles; the package
+barrel (`@idlekitjs/mechanics`) re-exports all of them for convenience.
+
+## Mechanics
+
+- `producers`, `modifiers`, `collections`, `projects`, `crafting`, `boosts`,
+  `containers`, `timers`, `pickups` — one subpath each
+  (`@idlekitjs/mechanics/<mechanic>`).
+- Optional Economy bridges live at `@idlekitjs/mechanics/<mechanic>/economy`
+  (e.g. `producers/economy`, `crafting/economy`, `containers/economy`). They are
+  subpath-only, never re-exported from the barrel, so a mechanic stays usable
+  without [`@idlekitjs/economy`](https://idlekitjs.github.io/packages/economy).
 
 ## Rendering Progress
 

@@ -35,7 +35,7 @@
     "url": "git+https://github.com/idlekitjs/idlekit.git",
     "directory": "packages/plugins"
   },
-  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/plugins#readme",
+  "homepage": "https://idlekitjs.github.io/packages/plugins",
   "bugs": {
     "url": "https://github.com/idlekitjs/idlekit/issues"
   },

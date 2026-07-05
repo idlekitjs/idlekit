@@ -3,6 +3,9 @@
 Headless IdleKit engine runtime: reactive state, simulation loop, events, save
 manager, decimal numbers, randomness, and formatting helpers.
 
+- Documentation: <https://idlekitjs.github.io/packages/core>
+- Repository: <https://github.com/idlekitjs/idlekit>
+
 ## Install
 
 IdleKit is ESM-only and published on npm under the `@idlekitjs` scope:
@@ -63,6 +66,26 @@ formatDuration(90_000); //    "1m 30s" — milliseconds (wall-clock domain)
   `formatDuration(ms)`.
 - `formatDurationSeconds` is a thin wrapper over `formatDuration`, so both share
   the same `d/h/m/s` output and sub-second flooring.
+
+## Key APIs
+
+- `createEngine` / `Engine` — the runtime orchestrator (systems, extensions,
+  fixed-step loop, `advance` for offline catch-up).
+- `SimulationLoop`, `manualScheduler` — the fixed-step loop and headless/test
+  frame driver.
+- `ReactiveStore` — proxy-based state; tracks **top-level keys only**.
+- `EventBus` — typed engine events (`loaded`, `resume`).
+- `SaveManager` — versioned save/load with migrations (adapters come from
+  [`@idlekitjs/storage`](https://idlekitjs.github.io/packages/storage)).
+- `Decimal` / `D`, `Random` / `createRandom` — big numbers and a seedable PRNG.
+- `formatNumber`, `formatInteger`, `parseNumber`, `SUFFIXES`, `formatDuration`,
+  `formatDurationSeconds` — formatting helpers (above).
+
+Core is headless: rendering lives in
+[`@idlekitjs/dom`](https://idlekitjs.github.io/packages/dom) /
+[`@idlekitjs/react`](https://idlekitjs.github.io/packages/react), and browser
+frame/lifecycle bridges in
+[`@idlekitjs/browser`](https://idlekitjs.github.io/packages/browser).
 
 ## Status
 

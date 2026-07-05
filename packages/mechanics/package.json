@@ -91,7 +91,7 @@
     "url": "git+https://github.com/idlekitjs/idlekit.git",
     "directory": "packages/mechanics"
   },
-  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/mechanics#readme",
+  "homepage": "https://idlekitjs.github.io/packages/mechanics",
   "bugs": {
     "url": "https://github.com/idlekitjs/idlekit/issues"
   },

@@ -35,7 +35,7 @@
     "url": "git+https://github.com/idlekitjs/idlekit.git",
     "directory": "packages/economy"
   },
-  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/economy#readme",
+  "homepage": "https://idlekitjs.github.io/packages/economy",
   "bugs": {
     "url": "https://github.com/idlekitjs/idlekit/issues"
   },

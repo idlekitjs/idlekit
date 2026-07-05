@@ -35,7 +35,7 @@
     "url": "git+https://github.com/idlekitjs/idlekit.git",
     "directory": "packages/storage"
   },
-  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/storage#readme",
+  "homepage": "https://idlekitjs.github.io/packages/storage",
   "bugs": {
     "url": "https://github.com/idlekitjs/idlekit/issues"
   },

@@ -39,7 +39,7 @@
     "url": "git+https://github.com/idlekitjs/idlekit.git",
     "directory": "packages/browser"
   },
-  "homepage": "https://github.com/idlekitjs/idlekit/tree/main/packages/browser#readme",
+  "homepage": "https://idlekitjs.github.io/packages/browser",
   "bugs": {
     "url": "https://github.com/idlekitjs/idlekit/issues"
   },

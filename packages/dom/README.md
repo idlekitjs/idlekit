@@ -1,6 +1,10 @@
 # @idlekitjs/dom
 
-DOM renderer and declarative bindings for IdleKit games.
+DOM renderer and declarative bindings for IdleKit games. Optional, and owns DOM
+concerns only — the dependency flows `dom -> core`, never the reverse.
+
+- Documentation: <https://idlekitjs.github.io/packages/dom>
+- Repository: <https://github.com/idlekitjs/idlekit>
 
 ## Install
 
@@ -19,7 +23,20 @@ import { Renderer, bindText } from "@idlekitjs/dom";
 import { bindEach } from "@idlekitjs/dom/bind-each";
 ```
 
-## Reactive vs Frame Bindings
+## Key APIs
+
+- `Renderer` — the dependency-tracked binding runner; inject it via
+  `createEngine({ renderer })`.
+- `bindText`, `bindClass`, `bindVisible`, `bindDisabled` — built-in element
+  bindings that cache and skip identical DOM writes.
+- `bindEach` — keyed list rendering (also on `@idlekitjs/dom/bind-each`).
+
+Building a React UI instead? Use
+[`@idlekitjs/react`](https://idlekitjs.github.io/packages/react). Browser
+runtime bridges (rAF scheduler, page lifecycle, screen helpers) live in
+[`@idlekitjs/browser`](https://idlekitjs.github.io/packages/browser).
+
+## Reactive vs frame bindings
 
 Use `renderer.add(...)` for discrete state changes, such as counts,
 availability labels, visible lists, and completed jobs.
