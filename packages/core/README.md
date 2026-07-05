@@ -47,14 +47,22 @@ SUFFIXES; // readonly ["", "K", "M", ...] shared by both directions
 
 ### Duration units
 
+```ts
+import { formatDuration, formatDurationSeconds } from "@idlekitjs/core";
+
+formatDurationSeconds(90); // "1m 30s" — seconds (simulation/mechanics domain)
+formatDuration(90_000); //    "1m 30s" — milliseconds (wall-clock domain)
+```
+
 - Simulation/mechanics durations are in **seconds** (`dt`, `step`, and
-  producer/timer/crafting/boost durations).
+  producer/timer/crafting/boost durations). Format them with
+  `formatDurationSeconds(seconds)`.
 - Wall-clock and browser/plugin options with an `Ms` suffix are in
   **milliseconds** (`offlineProgress.maxMs`, `autosave.intervalMs`,
-  `devtools.refreshMs`, the `resume` event).
-- `formatDuration` currently takes **milliseconds**. Convert seconds-domain
-  values explicitly (`formatDuration(seconds * 1000)`) until a seconds-domain
-  formatter is designed.
+  `devtools.refreshMs`, the `resume` event). Format them with
+  `formatDuration(ms)`.
+- `formatDurationSeconds` is a thin wrapper over `formatDuration`, so both share
+  the same `d/h/m/s` output and sub-second flooring.
 
 ## Status
 

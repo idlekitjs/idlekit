@@ -89,9 +89,7 @@ export function parseNumber(value: string): number {
  * and browser/plugin options carry an explicit `Ms` suffix and are in
  * **milliseconds** (`offlineProgress.maxMs`, `autosave.intervalMs`,
  * `devtools.refreshMs`, the `resume` event). `formatDuration` takes
- * **milliseconds**, so convert seconds-domain values explicitly at the call
- * site (e.g. `formatDuration(seconds * 1000)`) until a seconds-domain formatter
- * is designed.
+ * **milliseconds**; for seconds-domain values use {@link formatDurationSeconds}.
  */
 export function formatDuration(ms: number): string {
   const totalSeconds = Math.floor(ms / 1000);
@@ -106,4 +104,17 @@ export function formatDuration(ms: number): string {
   if (minutes > 0) parts.push(`${minutes}m`);
   if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`);
   return parts.join(" ");
+}
+
+/**
+ * Human-readable duration from **seconds**: `90` -> `"1m 30s"`. The
+ * seconds-domain companion to {@link formatDuration}, meant for simulation and
+ * mechanics durations (`dt`, `step`, producer/timer/crafting/boost durations),
+ * which are all expressed in seconds — so no manual `* 1000` at the call site.
+ *
+ * Delegates to {@link formatDuration}; sub-second values floor the same way
+ * (e.g. `1.9` -> `"1s"`).
+ */
+export function formatDurationSeconds(seconds: number): string {
+  return formatDuration(seconds * 1000);
 }

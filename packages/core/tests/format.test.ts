@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { formatNumber, formatInteger, formatDuration, parseNumber, SUFFIXES } from "../src/format";
+import {
+  formatNumber,
+  formatInteger,
+  formatDuration,
+  formatDurationSeconds,
+  parseNumber,
+  SUFFIXES,
+} from "../src/format";
 
 describe("formatNumber", () => {
   it("keeps small integers as-is", () => {
@@ -105,5 +112,29 @@ describe("formatDuration", () => {
 
   it("formats days and hours", () => {
     expect(formatDuration(90_000_000)).toBe("1d 1h");
+  });
+});
+
+describe("formatDurationSeconds", () => {
+  it("formats minutes and seconds", () => {
+    expect(formatDurationSeconds(90)).toBe("1m 30s");
+  });
+
+  it("shows 0s for a zero duration", () => {
+    expect(formatDurationSeconds(0)).toBe("0s");
+  });
+
+  it("formats days and hours", () => {
+    expect(formatDurationSeconds(90_000)).toBe("1d 1h");
+  });
+
+  it("floors sub-second values like formatDuration", () => {
+    expect(formatDurationSeconds(1.9)).toBe("1s");
+  });
+
+  it("equals formatDuration(seconds * 1000)", () => {
+    for (const s of [0, 1.9, 30, 90, 3661, 90_000]) {
+      expect(formatDurationSeconds(s)).toBe(formatDuration(s * 1000));
+    }
   });
 });
