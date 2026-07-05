@@ -46,6 +46,35 @@ scope. Fractional outputs are kept by default, or can be rounded with
 `yieldRounding: "floor"` / `"round"` / `"ceil"`. `onComplete` receives the actual credited
 outputs after multiplier and rounding.
 
+## Container Transfers
+
+`@idlekitjs/mechanics/containers/economy` provides one-call helpers to move a
+resource bag into or out of a container without hand-building a transaction:
+
+```ts
+import {
+  transferBagToContainer,
+  transferContainerToBag,
+} from "@idlekitjs/mechanics/containers/economy";
+
+const bag = { get: (s) => s.stock, set: (s, next) => (s.stock = next) };
+
+// Load finished goods into the dock, or move nothing if they do not all fit.
+const result = transferBagToContainer(dock, bag, state, "dock");
+if (result.ok) {
+  // result.moved / result.movedVolume describe what was placed.
+} else {
+  // result.blocked explains the block (unknown-container, empty-request,
+  // missing-source, or insufficient-space).
+}
+```
+
+Both helpers compose the container mechanic's own `fillUpTo`/`drain`, so the
+container stays the source of truth for capacity. `mode` defaults to
+`"all-or-nothing"` (move the full request or nothing, leaving no trace);
+`"partial"` moves as much as the source has and the container can hold. A missing
+`request` moves the whole bag / whole container.
+
 ## Status
 
 Public package in the IdleKit toolkit, published on npm under the `@idlekitjs` scope.
