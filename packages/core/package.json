@@ -1,6 +1,6 @@
 {
   "name": "@idlekitjs/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Reusable engine for incremental games: reactive state, loop, saving, big numbers, formatting.",
   "type": "module",
   "sideEffects": false,

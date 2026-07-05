@@ -1,5 +1,12 @@
 # @idlekitjs/mechanics
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [3b4f2f8]
+  - @idlekitjs/core@0.3.0
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@idlekitjs/mechanics",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Reusable idle gameplay primitives for @idlekitjs (producers, modifiers, collections, projects).",
   "type": "module",
   "sideEffects": false,
