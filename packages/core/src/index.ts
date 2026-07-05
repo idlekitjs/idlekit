@@ -49,6 +49,6 @@ export type { DecimalSource } from "./numbers";
 export { Random, createRandom } from "./random";
 
 // Formatting
-export { formatNumber, formatInteger, formatDuration } from "./format";
+export { formatNumber, formatInteger, formatDuration, parseNumber, SUFFIXES } from "./format";
 
 // Note: the DOM renderer and bindings live in @idlekitjs/dom (core is headless).

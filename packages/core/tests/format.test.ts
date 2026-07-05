@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatNumber, formatInteger, formatDuration } from "../src/format";
+import { formatNumber, formatInteger, formatDuration, parseNumber, SUFFIXES } from "../src/format";
 
 describe("formatNumber", () => {
   it("keeps small integers as-is", () => {
@@ -29,6 +29,68 @@ describe("formatNumber", () => {
 describe("formatInteger", () => {
   it("adds thousands separators", () => {
     expect(formatInteger(1234567)).toBe("1,234,567");
+  });
+});
+
+describe("SUFFIXES", () => {
+  it("is the idle-standard tier list, units first", () => {
+    expect(SUFFIXES[0]).toBe("");
+    expect(SUFFIXES[1]).toBe("K");
+    expect(SUFFIXES).toContain("Qi");
+    expect(SUFFIXES[SUFFIXES.length - 1]).toBe("Dc");
+  });
+});
+
+describe("parseNumber", () => {
+  it("parses plain integers", () => {
+    expect(parseNumber("123")).toBe(123);
+  });
+
+  it("parses decimals", () => {
+    expect(parseNumber("1.5")).toBe(1.5);
+  });
+
+  it("parses scientific notation", () => {
+    expect(parseNumber("1.5e19")).toBe(1.5e19);
+    expect(parseNumber("1.5E19")).toBe(1.5e19);
+  });
+
+  it("parses compact suffix notation", () => {
+    expect(parseNumber("1K")).toBe(1_000);
+    expect(parseNumber("2.5M")).toBe(2_500_000);
+    expect(parseNumber("15Qi")).toBe(15 * 1e18);
+  });
+
+  it("handles every suffix tier", () => {
+    SUFFIXES.forEach((suffix, tier) => {
+      const text = suffix === "" ? "3" : `3${suffix}`;
+      expect(parseNumber(text)).toBe(3 * Math.pow(1000, tier));
+    });
+  });
+
+  it("trims surrounding whitespace", () => {
+    expect(parseNumber("  2.5M  ")).toBe(2_500_000);
+  });
+
+  it("is case-sensitive to the suffix table", () => {
+    expect(() => parseNumber("1k")).toThrow();
+    expect(() => parseNumber("15qi")).toThrow();
+  });
+
+  it("rejects an unknown suffix", () => {
+    expect(() => parseNumber("5X")).toThrow(/unknown suffix/);
+  });
+
+  it("rejects an invalid string", () => {
+    expect(() => parseNumber("abc")).toThrow();
+    expect(() => parseNumber("")).toThrow();
+    expect(() => parseNumber("   ")).toThrow();
+  });
+
+  it("round-trips values formatted by formatNumber", () => {
+    expect(parseNumber(formatNumber(1500))).toBe(1500);
+    expect(parseNumber(formatNumber(2_500_000))).toBe(2_500_000);
+    expect(parseNumber(formatNumber(3_000_000_000))).toBe(3_000_000_000);
   });
 });
 
