@@ -1,6 +1,6 @@
 {
   "name": "@idlekitjs/plugins",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Platform-agnostic engine policies for @idlekitjs (autosave, offline progress).",
   "type": "module",
   "sideEffects": false,

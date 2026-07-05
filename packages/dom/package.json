@@ -1,6 +1,6 @@
 {
   "name": "@idlekitjs/dom",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "DOM renderer and declarative bindings for @idlekitjs games (bindText, bindClass, ...).",
   "type": "module",
   "sideEffects": false,
